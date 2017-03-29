@@ -1,4 +1,5 @@
 import requests
+import re
 from datetime import date
 from bs4 import BeautifulSoup
 from race_event_types import Event
@@ -89,14 +90,18 @@ for race_container in race_containers:
     also_ran_arr = [x.replace('ALSO RAN:\n', '') for x in also_ran.split(',')]
 
     for competitor in also_ran_arr:
+        competitor_breakdown = competitor.split('-')
         # add other competitors to collection
         new_race.competitors.append(
-            Competitor(number=also_ran_arr[0],
-                       name=also_ran_arr[0],
-                       jockey=third_results[2].contents[0],
+            Competitor(number=competitor_breakdown[0],
+                       name=competitor_breakdown[1],
+                       jockey=re.sub(r'\([^)]*\)', '', competitor_breakdown[2]),
                        win=None,
-                       place=third_results[4].contents[0].strip()))
+                       place=None,
+                       lengths_behind_leader=None))  # lengths is too dirty
 
-    print(str(also_ran_arr))
+    # scrape bet information
+
+    # scrape remaining race information
 
     event.races.append(new_race)
