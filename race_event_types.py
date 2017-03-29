@@ -6,17 +6,21 @@ class Event(object):
         self.date = date
         self.races = races
 
+    def __repr__(self):
+        return "%s (%s). No of races: %s" \
+            % (self.name, self.date, len(self.races))
+
 
 class Race(object):
 
-    def __init__(self, race_number, time,
+    def __init__(self, race_number,
                  distance, stake,
                  track_condition, weather, bets,
                  winning_margins, winner_owners,
                  winner_trainer, winner_breeding,
                  sub, winner_time, competitors=[]):
         self.race_number = race_number
-        self.time = time
+        self.distance = distance
         self.stake = stake
         self.track_condition = track_condition
         self.weather = weather
