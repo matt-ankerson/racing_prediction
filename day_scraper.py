@@ -13,8 +13,11 @@ def ScrapeDay(day, month, year):
         raw_links = soup.find('h3', text='SEARCH RESULTS')\
             .parent.parent.find_all('a')
 
-        links = [x['href'] for x in raw_links if x.has_attr('href')]
+        links = [x['href'] for x in raw_links
+                 if x.has_attr('href') and not x.has_attr('nofollow')]
         return links
+    else:
+        return []
 
 
 # ScrapeDay(27, 3, 2002)

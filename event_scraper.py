@@ -66,36 +66,42 @@ def ScrapeEvent(race_result_url):
                         winner_time=None,
                         competitors=[])
 
-        # results info
-        placing_results = race_container.find('table', class_='raceResults')\
-            .find('tbody').find_all('tr')
+        # add first 3 results (if there are any)
+        try:
+            placing_results = \
+                race_container.find('table', class_='raceResults')\
+                .find('tbody').find_all('tr')
 
-        win_results = placing_results[0].findChildren()
-        second_results = placing_results[1].findChildren()
-        third_results = placing_results[2].findChildren()
+            win_results = placing_results[0].findChildren()
+            second_results = placing_results[1].findChildren()
+            third_results = placing_results[2].findChildren()
 
-        # first place
-        new_race.competitors.append(Competitor(
-                                    number=win_results[0].contents[0],
-                                    name=win_results[1].contents[0],
-                                    jockey=win_results[2].contents[0],
-                                    win=win_results[3].contents[0].strip(),
-                                    place=win_results[4].contents[0].strip()))
-        # second place
-        new_race.competitors.append(Competitor(
-                                    number=second_results[0].contents[0],
-                                    name=second_results[1].contents[0],
-                                    jockey=second_results[2].contents[0],
-                                    win=None,
-                                    place=second_results[4].contents[0]
-                                    .strip()))
-        # third place
-        new_race.competitors.append(Competitor(
-                                    number=third_results[0].contents[0],
-                                    name=third_results[1].contents[0],
-                                    jockey=third_results[2].contents[0],
-                                    win=None,
-                                    place=third_results[4].contents[0].strip()))
+            # first place
+            new_race.competitors.append(Competitor(
+                                        number=win_results[0].contents[0],
+                                        name=win_results[1].contents[0],
+                                        jockey=win_results[2].contents[0],
+                                        win=win_results[3].contents[0].strip(),
+                                        place=win_results[4]
+                                        .contents[0].strip()))
+            # second place
+            new_race.competitors.append(Competitor(
+                                        number=second_results[0].contents[0],
+                                        name=second_results[1].contents[0],
+                                        jockey=second_results[2].contents[0],
+                                        win=None,
+                                        place=second_results[4].contents[0]
+                                        .strip()))
+            # third place
+            new_race.competitors.append(Competitor(
+                                        number=third_results[0].contents[0],
+                                        name=third_results[1].contents[0],
+                                        jockey=third_results[2].contents[0],
+                                        win=None,
+                                        place=third_results[4]
+                                        .contents[0].strip()))
+        except:
+            pass
 
         # add remaining competitors (if any are listed)
         try:
@@ -121,8 +127,11 @@ def ScrapeEvent(race_result_url):
             pass
 
         # scrape bet information (of which there are an arbitrary number)
-        bets = race_container.find('div', text='Bet Type')\
-            .parent.parent.parent.parent.find('tbody').find_all('tr')
+        try:
+            bets = race_container.find('div', text='Bet Type')\
+                .parent.parent.parent.parent.find('tbody').find_all('tr')
+        except:
+            bets = []
 
         for bet_row in bets:
             clean_bet_row = [x.text.strip() for x in bet_row.findChildren()]
@@ -135,11 +144,18 @@ def ScrapeEvent(race_result_url):
                                      dividend=clean_bet_row[2]))
 
         # scrape remaining race information
-        race_metadata = race_container.find('strong', text='Winning Margins:')\
-            .parent.parent.text.split('\n')
-        race_metadata = [x.strip().split(':') for x in race_metadata if x != '']
-        race_metadata = [item for sublist in race_metadata for item in sublist]
-        race_metadata = [x for x in race_metadata if x != '']
+        try:
+            race_metadata = race_container\
+                .find('strong', text='Winning Margins:')\
+                .parent.parent.text.split('\n')
+            race_metadata = \
+                [x.strip().split(':') for x in race_metadata if x != '']
+            race_metadata = \
+                [item for sublist in race_metadata for item in sublist]
+            race_metadata = \
+                [x for x in race_metadata if x != '']
+        except:
+            race_metadata = []
 
         # sometimes these attributes are missing
         try:
@@ -180,5 +196,5 @@ def ScrapeEvent(race_result_url):
 
     return event
 
-# event = ScrapeEvent("https://ebet.tab.co.nz/results/AUKG-reslt03270200.html")
+# event = ScrapeEvent("https://ebet.tab.co.nz/results/DBAI-reslt03251700.html")
 # print(str(event))
