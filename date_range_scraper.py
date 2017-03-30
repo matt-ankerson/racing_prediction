@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 from day_scraper import ScrapeDay
 from event_scraper import ScrapeEvent
+from storage_service import SaveEvent
 import time
 import sys
 
@@ -15,10 +16,11 @@ def IterateDateRange(start_date, end_date):
         # get the links to events for this day
         try:
             links = ScrapeDay(race_date.day, race_date.month, race_date.year)
+            print('Found %s events for %s:' % (len(links), race_date))
         except:
             links = []
             e = sys.exc_info()[0]
-            print(e)
+            print('Failed to get events for %s. Error: %s' % (race_date, e))
 
         for link in links:
             # delay request by half a second
@@ -27,12 +29,14 @@ def IterateDateRange(start_date, end_date):
                 event = ScrapeEvent('https://ebet.tab.co.nz' + link)
                 print(str(event))
                 # push the event off to a database
+                SaveEvent(event)
             except:
                 e = sys.exc_info()[0]
-                print(e)
+                print('Failed to collect event information at %s. Error: %s'
+                      % (link, e))
 
 
-start = date(2017, 3, 27)
-end = date(2017, 3, 27)
+start = date(2000, 1, 1)
+end = date(2017, 3, 30)
 
 IterateDateRange(start, end)

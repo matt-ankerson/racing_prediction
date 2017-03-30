@@ -44,8 +44,9 @@ class Bet(object):
 
 class Competitor(object):
 
-    def __init__(self, number, name, jockey, place,
+    def __init__(self, place_in_race, number, name, jockey, place,
                  win=None, lengths_behind_leader=None):
+        self.place_in_race = place_in_race
         self.number = number
         self.name = name
         self.jockey = jockey

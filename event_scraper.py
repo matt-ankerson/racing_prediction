@@ -78,6 +78,8 @@ def ScrapeEvent(race_result_url):
 
             # first place
             new_race.competitors.append(Competitor(
+                                        place_in_race=(
+                                            len(new_race.competitors) + 1),
                                         number=win_results[0].contents[0],
                                         name=win_results[1].contents[0],
                                         jockey=win_results[2].contents[0],
@@ -86,6 +88,8 @@ def ScrapeEvent(race_result_url):
                                         .contents[0].strip()))
             # second place
             new_race.competitors.append(Competitor(
+                                        place_in_race=(
+                                            len(new_race.competitors) + 1),
                                         number=second_results[0].contents[0],
                                         name=second_results[1].contents[0],
                                         jockey=second_results[2].contents[0],
@@ -94,6 +98,8 @@ def ScrapeEvent(race_result_url):
                                         .strip()))
             # third place
             new_race.competitors.append(Competitor(
+                                        place_in_race=(
+                                            len(new_race.competitors) + 1),
                                         number=third_results[0].contents[0],
                                         name=third_results[1].contents[0],
                                         jockey=third_results[2].contents[0],
@@ -117,6 +123,7 @@ def ScrapeEvent(race_result_url):
                 # add other competitors to collection
                 new_race.competitors.append(
                     Competitor(number=competitor_breakdown[0],
+                               place_in_race=(len(new_race.competitors) + 1),
                                name=competitor_breakdown[1],
                                jockey=re.sub(r'\([^)]*\)', '',
                                competitor_breakdown[2]),
