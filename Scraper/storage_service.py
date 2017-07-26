@@ -34,7 +34,8 @@ def SaveEvent(event):
         })
 
     r = requests.post(
-        url='http://localhost:58180/api/event',
+        url='http://localhost:58180/odata/Events',
         data=json.dumps(event_payload),
-        headers={'content-type': 'application/json'})
+        headers={'content-type':
+                 'application/json; charset=UTF-8'})
     return r.status_code

@@ -36,7 +36,7 @@ def IterateDateRange(start_date, end_date):
                       % (link, e))
 
 
-start = date(2017, 4, 2)
-end = date(2017, 7, 24)
+start = date(2017, 7, 24)
+end = date(2017, 7, 26)
 
 IterateDateRange(start, end)

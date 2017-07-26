@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
-using System.Web.Http.OData;
+using System.Web.OData;
 using System.Web.Http.OData.Query;
 using System.Web.Http.OData.Routing;
 using RaceService.Models;
@@ -16,33 +16,32 @@ using Microsoft.Data.OData;
 
 namespace RaceService.Controllers
 {
-    public class ProductsController : ODataController
+    public class RacesController : ODataController
     {
+        RaceDataContext context = new RaceDataContext("default");
+
         private bool RaceExists(int key)
         {
-            using (var context = new RaceDataContext("default"))
-            {
-                return context.Races.Any(r => r.id == key);
-            }
+            return context.Races.Any(r => r.id == key);
         }
 
         [EnableQuery]
         public IQueryable<Race> Get()
         {
-            using (var context = new RaceDataContext("default"))
-            {
-                return context.Races;
-            }
+            return context.Races;
         }
 
         [EnableQuery]
         public SingleResult<Race> Get([FromODataUri] int key)
         {
-            using (var context = new RaceDataContext("default"))
-            {
-                IQueryable<Race> result = context.Races.Where(r => r.id == key);
-                return SingleResult.Create(result);
-            }
+            IQueryable<Race> result = context.Races.Where(r => r.id == key);
+            return SingleResult.Create(result);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            context.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
