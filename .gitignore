@@ -1,2 +1,5 @@
+*.suo
+*.pdb
+*.dll
 *.pyc
 *.swp
