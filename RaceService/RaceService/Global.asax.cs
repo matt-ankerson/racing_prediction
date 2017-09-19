@@ -16,8 +16,8 @@ namespace RaceService
             AreaRegistration.RegisterAllAreas();
 
             GlobalConfiguration.Configure(config => {
-                OdataConfig.Register(config);
                 WebApiConfig.Register(config);
+                OdataConfig.Register(config);
             });
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
